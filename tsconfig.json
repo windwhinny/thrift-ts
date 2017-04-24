@@ -16,7 +16,6 @@
       "es2017"
     ],
     "typeRoots": [
-      "./declarations/",
       "./node_modules/@types/"
     ],
     "experimentalDecorators": true

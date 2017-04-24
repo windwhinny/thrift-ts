@@ -6,16 +6,25 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "url": "https://github.com/windwhinny/thrift-ts.git",
+    "type": "git"
+  },
   "author": "Eric Time",
   "license": "ISC",
   "devDependencies": {
     "@types/chai": "^3.5.0",
     "@types/mocha": "^2.2.40",
+    "@types/node": "^7.0.13",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
     "typescript": "^2.2.2"
   },
+  "bin": {
+    "thrift-ts": "./bin/thrift-ts"
+  },
   "dependencies": {
-    "thrift-parser": "^0.3.0"
+    "glob": "^7.1.1",
+    "yargs": "^7.1.0"
   }
 }
