@@ -1,6 +1,6 @@
 {
   "name": "thrift-ts",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,7 @@
     "typescript": "^2.2.2"
   },
   "bin": {
-    "thrift-ts": "./bin/thrift-ts"
+    "thrift-ts": "./bin/thrift-ts.js"
   },
   "dependencies": {
     "glob": "^7.1.1",
