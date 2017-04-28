@@ -40,6 +40,7 @@ class Compiler extends BaseCompiler {
   }
 
   flush(): File[] {
+    this.writeCommonType();
     if (this.ast.include) {
       this.writeInclude(this.ast.include);
     }

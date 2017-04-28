@@ -24,6 +24,7 @@ class Compiler extends BaseCompiler_1.default {
         }
     }
     flush() {
+        this.writeCommonType();
         if (this.ast.include) {
             this.writeInclude(this.ast.include);
         }

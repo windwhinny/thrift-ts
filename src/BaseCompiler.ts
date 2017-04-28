@@ -72,7 +72,7 @@ export default class BaseCompiler {
       case 'i16':
         return 'number';
       case 'i64':
-        return 'string';
+        return 'Int64';
       case 'string':
         return 'string';
       default:
@@ -333,8 +333,24 @@ export default class BaseCompiler {
     });
   }
 
-  writeCommon() {
+  writeCallbackTypeDeclare() {
+    this.wIntend();
     this.write('type Callback<T, E> = (err: E, resp: T) => void;\n\n');
+  }
+
+  writeCommonType() {
+    this.wIntend();
+    this.write('interface Int64 {');
+    this.increaseIntend();
+    this.wIntend();
+    this.write('constructor(o?: number | string): this;', '\n');
+    this.wIntend();
+    this.write('toString(): string;', '\n');
+    this.wIntend();
+    this.write('toJson(): string;');
+    this.decreaseIntend();
+    this.wIntend();
+    this.write('}\n\n');
   }
 
   wPromise(type: ValueType, err: ArgOrExecption[]) {

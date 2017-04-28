@@ -10,7 +10,8 @@ class ServiceCompiler extends BaseCompiler_1.default {
         this.includes = includes;
     }
     flush() {
-        this.writeCommon();
+        this.writeCallbackTypeDeclare();
+        this.writeCommonType();
         if (this.includes) {
             this.writeInclude(this.includes);
         }
