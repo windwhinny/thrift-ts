@@ -11,5 +11,6 @@ export type File = {
 
 export type CompileOptions = {
   tabSize?: number,
-  spaceAsTab?: boolean
+  spaceAsTab?: boolean,
+  int64AsString?: boolean,
 }

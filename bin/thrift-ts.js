@@ -23,6 +23,12 @@ const argv = require('yargs')
     describe: 'out put dir',
     type: 'string'
   })
+  .options('i', {
+    alias: 'int64AsString',
+    describe: 'treat type int64 as type string',
+    default: false,
+    type: 'boolean'
+  })
   .help('h')
   .alias('h', 'help')
   .argv;
@@ -42,10 +48,13 @@ argv._.forEach((p) => {
   glob(p, (err, files) => {
     if (err) throw err;
     files.forEach(file => {
-      
       const files = thriftTs.default({
         filename: file,
         content: fs.readFileSync(file)
+      }, {
+        tabSize: argv.tabSize,
+        spaceAsTab: argv.spaceAsTab,
+        int64AsString: argv.int64AsString,
       });
       files.forEach(file => {
         console.log(path.join(out, file.filename))

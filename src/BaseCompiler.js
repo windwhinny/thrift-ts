@@ -7,12 +7,16 @@ class BaseCompiler {
         this.intendMode = types_1.INTEND_MODE.TAB;
         this.tabSize = 2;
         this.buffer = [];
+        this.int64AsString = false;
         if (options) {
             if (typeof options.tabSize !== 'undefined') {
                 this.tabSize = options.tabSize;
             }
             if (typeof options.spaceAsTab !== 'undefined') {
                 this.intendMode = options.spaceAsTab ? types_1.INTEND_MODE.SPACE : types_1.INTEND_MODE.TAB;
+            }
+            if (typeof options.int64AsString !== 'undefined') {
+                this.int64AsString = options.int64AsString;
             }
         }
     }
@@ -289,18 +293,24 @@ class BaseCompiler {
         this.write('type Callback<T, E> = (err: E, resp: T) => void;\n\n');
     }
     writeCommonType() {
-        this.wIntend();
-        this.write('interface Int64 {');
-        this.increaseIntend();
-        this.wIntend();
-        this.write('constructor(o?: number | string): this;', '\n');
-        this.wIntend();
-        this.write('toString(): string;', '\n');
-        this.wIntend();
-        this.write('toJson(): string;');
-        this.decreaseIntend();
-        this.wIntend();
-        this.write('}\n\n');
+        if (this.int64AsString) {
+            this.wIntend();
+            this.write('type', types_1.SPACE, 'Int64', types_1.SPACE, '=', types_1.SPACE, 'string;', '\n');
+        }
+        else {
+            this.wIntend();
+            this.write('interface Int64 {');
+            this.increaseIntend();
+            this.wIntend();
+            this.write('constructor(o?: number | string): this;', '\n');
+            this.wIntend();
+            this.write('toString(): string;', '\n');
+            this.wIntend();
+            this.write('toJson(): string;');
+            this.decreaseIntend();
+            this.wIntend();
+            this.write('}\n\n');
+        }
     }
     wPromise(type, err) {
         this.write('Promise', '<');

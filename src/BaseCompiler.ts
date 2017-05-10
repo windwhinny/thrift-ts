@@ -30,6 +30,7 @@ export default class BaseCompiler {
   ast: JsonAST;
   buffer: string[] = [];
   filename: string;
+  int64AsString: boolean = false;
 
   constructor(options?: CompileOptions) {
     if (options) {
@@ -39,6 +40,10 @@ export default class BaseCompiler {
 
       if (typeof options.spaceAsTab !== 'undefined') {
         this.intendMode = options.spaceAsTab ? INTEND_MODE.SPACE : INTEND_MODE.TAB;
+      }
+
+      if (typeof options.int64AsString !== 'undefined') {
+        this.int64AsString = options.int64AsString;
       }
     }
   }
@@ -339,18 +344,23 @@ export default class BaseCompiler {
   }
 
   writeCommonType() {
-    this.wIntend();
-    this.write('interface Int64 {');
-    this.increaseIntend();
-    this.wIntend();
-    this.write('constructor(o?: number | string): this;', '\n');
-    this.wIntend();
-    this.write('toString(): string;', '\n');
-    this.wIntend();
-    this.write('toJson(): string;');
-    this.decreaseIntend();
-    this.wIntend();
-    this.write('}\n\n');
+    if (this.int64AsString) {
+      this.wIntend();
+      this.write('type', SPACE, 'Int64', SPACE, '=', SPACE, 'string;', '\n');
+    } else {
+      this.wIntend();
+      this.write('interface Int64 {');
+      this.increaseIntend();
+      this.wIntend();
+      this.write('constructor(o?: number | string): this;', '\n');
+      this.wIntend();
+      this.write('toString(): string;', '\n');
+      this.wIntend();
+      this.write('toJson(): string;');
+      this.decreaseIntend();
+      this.wIntend();
+      this.write('}\n\n');
+    }
   }
 
   wPromise(type: ValueType, err: ArgOrExecption[]) {
