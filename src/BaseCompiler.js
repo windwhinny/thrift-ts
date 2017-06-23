@@ -180,8 +180,8 @@ class BaseCompiler {
     }
     writeUnions(unions) {
         Object.keys(unions).forEach((k) => {
-            const u = unions[k];
-            this.wExport(() => this.wClass(k, u));
+            const s = unions[k];
+            this.wExport(() => this.wClass(k, s));
         });
     }
     writeExceptions(exceptions) {

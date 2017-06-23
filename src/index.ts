@@ -56,6 +56,9 @@ class Compiler extends BaseCompiler {
     if (this.ast.struct) {
       this.writeStructs(this.ast.struct);
     }
+    if (this.ast.union) {
+      this.writeUnions(this.ast.union);
+    }
     if (this.ast.exception) {
       this.writeExceptions(this.ast.exception);
     }

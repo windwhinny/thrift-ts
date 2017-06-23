@@ -40,6 +40,10 @@ export type Structs = {
   [name: string]: Field[],
 }
 
+export type Unions = {
+  [name: string]: Field[],
+}
+
 export type Exceptions = {
   [name: string]: Field[],
 }
@@ -113,6 +117,7 @@ export type JsonAST = {
   const?: Consts,
   enum?: Enums,
   struct?: Structs,
+  union?: Unions,
   exception?: Exceptions,
   service?: Services,
 };

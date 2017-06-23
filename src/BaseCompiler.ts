@@ -4,6 +4,7 @@ import {
   ValueType,
   Field,
   Structs,
+  Unions,
   Exceptions,
   Includes,
   Enums,
@@ -213,6 +214,13 @@ export default class BaseCompiler {
   writeStructs(structs: Structs) {
     Object.keys(structs).forEach((k: keyof typeof structs) => {
       const s = structs[k];
+      this.wExport(() => this.wClass(k, s));
+    });
+  }
+
+  writeUnions(unions: Unions) {
+    Object.keys(unions).forEach((k: keyof typeof unions) => {
+      const s = unions[k];
       this.wExport(() => this.wClass(k, s));
     });
   }
