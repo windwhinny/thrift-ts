@@ -178,6 +178,12 @@ class BaseCompiler {
             this.wExport(() => this.wClass(k, s));
         });
     }
+    writeUnions(unions) {
+        Object.keys(unions).forEach((k) => {
+            const u = unions[k];
+            this.wExport(() => this.wClass(k, u));
+        });
+    }
     writeExceptions(exceptions) {
         Object.keys(exceptions).forEach((k) => {
             const e = exceptions[k];
