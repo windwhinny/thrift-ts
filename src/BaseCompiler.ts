@@ -226,7 +226,7 @@ export default class BaseCompiler {
 
   writeInclude(includes: Includes) {
     const getIncludePath = (path: string): string => {
-      return './' + path.replace(/.thrift$/, '') + '_types';
+      return './' + path.replace(/.*\//, '').replace(/.thrift$/, '') + '_types';
     };
 
     Object.keys(includes).forEach((k: keyof typeof includes) => {
