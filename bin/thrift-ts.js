@@ -29,10 +29,21 @@ const argv = require('yargs')
     default: false,
     type: 'boolean'
   })
+  .options('v', {
+    alias: 'version',
+    describe: 'current version'
+  })
   .help('h')
   .alias('h', 'help')
   .argv;
-
+  
+if (argv.version) {
+  const pkg = fs.readFileSync(path.join(__dirname, '../package.json'), {
+    encoding: 'utf-8'
+  });
+  console.log('V' + JSON.parse(pkg).version)
+  return;
+}
 
 if (!argv._.length) {
   throw new Error('must specify a file');
