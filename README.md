@@ -1,15 +1,15 @@
-#thrift-ts
+# thrift-ts
 
 `thrift-ts` is a typescript compiler that compile *.thrift files to *.d.ts files.
 It should works with `thrift --gen js:node` commands.
 
-##Installation
+## Installation
 ```bash
 $ npm install -g thrift-ts
 ```
 
-##How to use
-###CLI
+## How to use
+### CLI
 ```bash
 // just compile one file
 thrift-ts Model.thrift
@@ -18,7 +18,7 @@ thrift-ts Model.thrift
 thrift-ts ./src -o ./dist
 ```
 
-###Node
+### Node
 ```js
 import thriftTs from 'thriftTs';
 import fs = require('fs');
