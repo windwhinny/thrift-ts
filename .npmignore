@@ -1,0 +1,10 @@
+.vscode
+*.ts
+typings
+test
+tsconfig.json
+typings.json
+.gitignore
+.npmignore
+.database.json
+tslint.json

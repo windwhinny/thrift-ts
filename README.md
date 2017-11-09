@@ -11,7 +11,11 @@ $ npm install -g thrift-ts
 ##How to use
 ###CLI
 ```bash
+// just compile one file
 thrift-ts Model.thrift
+
+// compile all IDL files in the folder and output in other folder
+thrift-ts ./src -o ./dist
 ```
 
 ###Node
