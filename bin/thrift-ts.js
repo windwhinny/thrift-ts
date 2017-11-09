@@ -61,6 +61,22 @@ function getBasePath(files) {
   return files[0].slice(0, i);
 }
 
+/**
+ * 如果直接输入文件夹的话，需转为类似 ./**\/*.thrift 
+ * @param {string} folder 
+ * @return {string} folder
+ */
+function getFolderPath(folder) {
+  const isFolder = !(folder && folder.match(/.thrift$/));
+  if (isFolder) {
+    if (folder.match(/\/$/)) {
+      return folder + '**/*.thrift';
+    }
+    return folder + '/**/*.thrift';
+  }
+  return folder;
+}
+
 let basePath = null;
 if (argv._.length > 1) {
   basePath = getBasePath(argv._);
@@ -73,12 +89,14 @@ argv._.forEach((p) => {
   } else {
     out = './';
   }
+  // 如果直接输入文件夹路径话，需做转化
+  p = getFolderPath(p);
   glob(p, (err, files) => {
     if (err) throw err;
     if (!basePath) {
       basePath = getBasePath(files); 
     }
-    console.log(basePath)
+    console.log('basePath:', basePath);
     files.forEach(file => {
       const files = thriftTs.default({
         filename: file,
@@ -89,8 +107,8 @@ argv._.forEach((p) => {
         int64AsString: argv.int64AsString,
       });
       files.forEach(newFile => {
-        const outfile = path.join(out, path.relative(basePath, path.dirname(file)), newFile.filename);
-        console.log(outfile);
+        const outfile = path.join(out, newFile.filename);
+        console.log('outfile:', outfile);
         fs.writeFileSync(outfile, newFile.content);
       })
     });
