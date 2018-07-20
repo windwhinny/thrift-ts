@@ -16,6 +16,9 @@ thrift-ts Model.thrift
 
 // compile all IDL files in the folder and output in other folder
 thrift-ts ./src -o ./dist
+
+// learn more
+thrift-ts -h
 ```
 
 ### Node
