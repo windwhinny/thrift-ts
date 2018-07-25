@@ -333,7 +333,8 @@ export default class BaseCompiler {
     Object.keys(typedefs).forEach((k: keyof TypeDefs) => {
       const typedef = typedefs[k];
       this.wIntend();
-      this.write('type', SPACE, k, SPACE, '=', SPACE, this.getTypeName(typedef.type));
+      this.write('type', SPACE, k, SPACE, '=', SPACE);
+      this.wValueType(this.getTypeName(typedef.type));
       this.write(';\n');
     });
   }
