@@ -44,10 +44,13 @@ export type Exceptions = {
   [name: string]: Field[],
 }
 
-export type Services = {
-  [serviceName: string]: {
+export type Service = {
+  functions: {
     [methodName: string]: Method,
-  },
+  }
+}
+export type Services = {
+  [name: string]: Service,
 }
 
 export type Namespaces = {
@@ -64,7 +67,7 @@ export type Includes = {
 
 export type TypeDefs = {
   [name: string]: {
-    type: string,
+    type: ValueType,
   }
 }
 

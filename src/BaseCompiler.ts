@@ -15,6 +15,7 @@ import {
   TypeDefs,
   ArgOrExecption,
   Method,
+  Service,
 } from '../lib/ast';
 import {
   INTEND_MODE,
@@ -213,14 +214,14 @@ export default class BaseCompiler {
   writeStructs(structs: Structs) {
     Object.keys(structs).forEach((k: keyof typeof structs) => {
       const s = structs[k];
-      this.wExport(() => this.wClass(k, s));
+      this.wExport(() => this.wClass(String(k), s));
     });
   }
 
   writeExceptions(exceptions: Exceptions) {
     Object.keys(exceptions).forEach((k: keyof typeof exceptions) => {
       const e = exceptions[k];
-      this.wExport(() => this.wException(k, e));
+      this.wExport(() => this.wException(String(k), e));
     });
   }
 
@@ -231,7 +232,7 @@ export default class BaseCompiler {
 
     Object.keys(includes).forEach((k: keyof typeof includes) => {
       const include = includes[k];
-      this.write('import', SPACE, '*', SPACE, 'as', SPACE, k, SPACE, 'from', SPACE, `'`, getIncludePath(include.path), `';\n`);
+      this.write('import', SPACE, '*', SPACE, 'as', SPACE, String(k), SPACE, 'from', SPACE, `'`, getIncludePath(include.path), `';\n`);
     });
   }
 
@@ -267,7 +268,7 @@ export default class BaseCompiler {
   writeEnum(enums: Enums) {
     Object.keys(enums).forEach((k: keyof typeof enums) => {
       const e = enums[k];
-      this.wEnum(k, e);
+      this.wEnum(String(k), e);
     });
   }
 
@@ -299,7 +300,7 @@ export default class BaseCompiler {
         this.increaseIntend();
         Object.keys(v).forEach((k: keyof typeof v) => {
           this.wIntend();
-          this.write(k, ':', SPACE);
+          this.write(String(k), ':', SPACE);
           this.wValue(v[k]);
           this.write(',\n');
         });
@@ -325,7 +326,7 @@ export default class BaseCompiler {
   writeConst(consts: Consts) {
     Object.keys(consts).forEach((k: keyof Consts) => {
       const c = consts[k];
-      this.wConst(k, c);
+      this.wConst(String(k), c);
     });
   }
 
@@ -333,8 +334,8 @@ export default class BaseCompiler {
     Object.keys(typedefs).forEach((k: keyof TypeDefs) => {
       const typedef = typedefs[k];
       this.wIntend();
-      this.write('type', SPACE, k, SPACE, '=', SPACE);
-      this.wValueType(this.getTypeName(typedef.type));
+      this.write('type', SPACE, String(k), SPACE, '=', SPACE);
+      this.wValueType(typedef.type);
       this.write(';\n');
     });
   }
@@ -426,14 +427,12 @@ export default class BaseCompiler {
     this.write(';'); this.write('\n');
   }
 
-  wService(methods: {
-    [name: string]: Method,
-  }) {
+  wService(service: Service) {
     this.wIntend();
     this.write('class', SPACE, 'Client', SPACE);
     this.wBlock(false, () => {
       this.increaseIntend();
-      Object.values(methods).forEach((method, index, array) => {
+      Object.values(service.functions).forEach((method, index, array) => {
         this.wMethod(method);
         if (index !== array.length - 1) {
           this.write('\n');

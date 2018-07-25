@@ -70,5 +70,9 @@ dist
 spm_modules
 .vscode
 src/**/*.js
+src/**/*.d.ts
 test/**/*.js
+test/**/*.d.ts
+lib/**/*.d.ts
+!test/mock/**/*.d.ts
 **/*.js.map

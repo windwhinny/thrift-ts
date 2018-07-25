@@ -3,9 +3,6 @@ import thriftPraser = require('../lib/thriftParser');
 import BaseCompiler from './BaseCompiler';
 import ServiceCompiler from './ServiceCompiler';
 import {
-  Services,
-} from '../lib/ast';
-import {
   File,
   CompileOptions,
 } from './types';
@@ -25,7 +22,7 @@ class Compiler extends BaseCompiler {
     this.filename = file.filename;
     this.ast = thriftPraser(file.content);
     if (this.ast.service) {
-      const service = this.ast.service;
+      const services = this.ast.service;
       const basename = path.basename(this.filename, '.thrift');
       const include = Object.assign({}, this.ast.include, {
         [basename]: {
@@ -33,8 +30,8 @@ class Compiler extends BaseCompiler {
         },
       });
 
-      this.serviceCompilers = Object.keys(this.ast.service).map((k: keyof Services) => {
-        return new ServiceCompiler(k, service[k], include, options);
+      this.serviceCompilers = Object.keys(services).map((k) => {
+        return new ServiceCompiler(String(k), services[k], include, options);
       });
     }
   }
@@ -79,10 +76,7 @@ class Compiler extends BaseCompiler {
 export default (sourceFile: {
   filename: string,
   content: string | Buffer,
-}, options?: {
-  tabSize?: number,
-  spaceAsTab?: boolean,
-}): File[] => {
+}, options?: CompileOptions): File[] => {
   const compiler = new Compiler(sourceFile, options);
   return compiler.flush();
 }

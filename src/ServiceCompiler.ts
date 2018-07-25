@@ -5,38 +5,27 @@ import {
   CompileOptions,
 } from './types';
 import {
-  Method,
   Includes,
+  Service,
 } from '../lib/ast';
 
 export default class ServiceCompiler extends BaseCompiler {
-  name: string;
-  methods: {
-    [methodName: string]: Method,
-  };
-  includes?: Includes;
-
   constructor(
-    name: string,
-    methods: {
-      [methodName: string]: Method,
-    },
-    includes?: Includes,
+    public name: string,
+    public service: Service,
+    public includes?: Includes,
     options?: CompileOptions,
   ) {
     super(options);
-    this.name = name;
-    this.methods = methods;
-    this.includes = includes;
   }
 
   flush(): File {
-    this.writeCallbackTypeDeclare();
-    this.writeCommonType();
     if (this.includes) {
       this.writeInclude(this.includes);
     }
-    this.wExport(() => this.wService(this.methods));
+    this.writeCallbackTypeDeclare();
+    this.writeCommonType();
+    this.wExport(() => this.wService(this.service));
 
     return {
       filename: `${path.basename(this.name, '.thrift')}.d.ts`,

@@ -1,5 +1,6 @@
 .vscode
 *.ts
+!*.d.ts
 typings
 test
 tsconfig.json
