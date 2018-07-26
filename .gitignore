@@ -67,12 +67,13 @@ Session.vim
 *~
 
 dist
+!test/mock/dist
 spm_modules
 .vscode
 src/**/*.js
 src/**/*.d.ts
 test/**/*.js
-test/**/*.d.ts
 lib/**/*.d.ts
-!test/mock/**/*.d.ts
+test/**/*.d.ts
+!test/mock/dist/*.d.ts
 **/*.js.map

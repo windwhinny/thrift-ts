@@ -10,7 +10,6 @@ describe('thriftTs', () => {
       filename,
       content,
     }, {
-      tabSize: 2,
       spaceAsTab: true,
     }).forEach(newFile => {
       const newFilename = Path.join(__dirname, './mock/dist', newFile.filename);

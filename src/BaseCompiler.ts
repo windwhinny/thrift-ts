@@ -222,7 +222,7 @@ export default class BaseCompiler {
   writeUnions(unions: Unions) {
     Object.keys(unions).forEach((k: keyof typeof unions) => {
       const s = unions[k];
-      this.wExport(() => this.wClass(k, s));
+      this.wExport(() => this.wClass(String(k), s));
     });
   }
 

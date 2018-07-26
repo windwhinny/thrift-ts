@@ -1,7 +1,7 @@
 {
   "name": "thrift-ts",
   "version": "1.1.5",
-  "description": "",
+  "description": "parse .thrift file to .d.ts",
   "main": "src/index.js",
   "scripts": {
     "test": "tsc && mocha"

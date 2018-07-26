@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/windwhinny/thrift-ts.svg?branch=master)](https://travis-ci.org/windwhinny/thrift-ts)
+
 # thrift-ts
 
 `thrift-ts` is a typescript compiler that compile *.thrift files to *.d.ts files.
