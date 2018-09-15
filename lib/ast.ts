@@ -14,7 +14,7 @@ export type MapType = {
   valueType: ValueType,
 }
 export type ValueType = string | SetType | ListType | MapType;
-export type ThriftType = 'int' | 'bool' | 'i16' | 'i32' | 'i64' | 'string' | 'double';
+export type ThriftType = 'int' | 'bool' | 'i8' | 'i16' | 'i32' | 'i64' | 'string' | 'double' | 'binary';
 export type FieldOption = 'required' | 'optional';
 export type Field = {
   id?: string,

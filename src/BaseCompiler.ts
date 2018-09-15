@@ -72,15 +72,19 @@ export default class BaseCompiler {
 
   getThriftTypeName(t: ThriftType) {
     switch (t) {
-      case 'int': return 'number';
-      case 'bool': return 'boolean';
+      case 'int':
+        return 'number';
+      case 'bool':
+        return 'boolean';
       case 'double':
       case 'i32':
       case 'i16':
+      case 'i8':
         return 'number';
       case 'i64':
         return 'Int64';
       case 'string':
+      case 'binary':
         return 'string';
       default:
         return null;
@@ -205,6 +209,28 @@ export default class BaseCompiler {
     this.write('\n');
   }
 
+  wUnion(name: string, ast: Field[]) {
+      this.write('type', SPACE, name, SPACE, '=', SPACE);
+      ast.forEach((field, idx) => {
+          this.write('{');
+          this.increaseIntend();
+          this.wIntend();
+          this.write(field.name);
+          if (field.option === 'optional') {
+            this.write('?');
+          }
+          this.write(':', SPACE);
+          this.wValueType(field.type);
+          this.write(';');
+          this.decreaseIntend();
+          this.write('}');
+          if (idx < ast.length - 1) {
+              this.write(' | ');
+          }
+      });
+      this.write('\n\n');
+  }
+
   wException(name: string, ast: Field[]) {
     this.wIntend();
     this.write('type', SPACE, name, SPACE, '=', SPACE);
@@ -222,7 +248,7 @@ export default class BaseCompiler {
   writeUnions(unions: Unions) {
     Object.keys(unions).forEach((k: keyof typeof unions) => {
       const s = unions[k];
-      this.wExport(() => this.wClass(String(k), s));
+      this.wExport(() => this.wUnion(String(k), s));
     });
   }
 
