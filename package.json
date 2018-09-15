@@ -4,7 +4,8 @@
   "description": "parse .thrift file to .d.ts",
   "main": "src/index.js",
   "scripts": {
-    "test": "tsc && mocha"
+    "build": "tsc",
+    "test": "npm run build && mocha"
   },
   "repository": {
     "url": "https://github.com/windwhinny/thrift-ts.git",
