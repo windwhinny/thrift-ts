@@ -17,6 +17,7 @@ import {
   ArgOrExecption,
   Method,
   Service,
+  MapType
 } from '../lib/ast';
 import {
   INTEND_MODE,
@@ -399,14 +400,17 @@ export default class BaseCompiler {
     }
   }
 
-  wPromise(type: ValueType, err: ArgOrExecption[]) {
+  wPromise(type: ValueType) {
     this.write('Promise', '<');
     this.wValueType(type);
-    if (err.length) {
-      this.write(',', SPACE);
-      this.write(err.map(e => e.type).join(' | '));
-    }
     this.write('>');
+  }
+
+  getUniqName(argsLike: {name: string}[], name: string = '') {
+    while (argsLike.findIndex((arg) => arg.name === name) >= 0) {
+        name = '_' + name;
+    }
+    return name;
   }
 
   wMethodArgs(args: ArgOrExecption[], callback?: {
@@ -424,7 +428,7 @@ export default class BaseCompiler {
     });
 
     if (callback) {
-      this.write('callback', ':', SPACE, 'Callback', '<');
+      this.write(this.getUniqName(args, 'callback'), ':', SPACE, 'Callback', '<');
       this.wValueType(callback.returnType);
       this.write(',', SPACE);
       if (callback.expections.length) {
@@ -456,17 +460,49 @@ export default class BaseCompiler {
     this.wBrackets(() => {
       this.wMethodArgs(method.args);
     });
-    this.write(':', SPACE)
-    this.wPromise(method.type, method.throws);
-    this.write(';'); this.write('\n');
+    this.write(':', SPACE);
+    this.wPromise(method.type);
+    this.write(';');
+    this.write('\n');
   }
 
-  wService(service: Service) {
+  getFixedType(type: ValueType, basename: string) {
+    if (type) {
+      if (typeof type === 'string') {
+        const parts = type.split('.');
+        if (!parts[1] && type[0] === type[0].toUpperCase()) {
+          type = basename + '.' + parts[0];
+        }
+      } else if (typeof type === 'object') {
+        if (type.hasOwnProperty('valueType')) {
+          type.valueType = this.getFixedType(type.valueType, basename);
+        }
+        if (type.hasOwnProperty('keyType')) {
+          (type as MapType).keyType = this.getFixedType(
+            (type as MapType).keyType,
+            basename
+          );
+        }
+      }
+    }
+    return type;
+  }
+
+  setArgFixedType(argLike: {type: ValueType}, basename: string) {
+    argLike.type = this.getFixedType(argLike.type, basename);
+    return argLike;
+  }
+
+  wService(service: Service, basename: string) {
     this.wIntend();
     this.write('class', SPACE, 'Client', SPACE);
     this.wBlock(false, () => {
       this.increaseIntend();
       Object.values(service.functions).forEach((method, index, array) => {
+        const setArgFixedType = (arg: {type: ValueType}) => this.setArgFixedType(arg, basename);
+        setArgFixedType(method);
+        method.args.forEach(setArgFixedType);
+        method.throws.forEach(setArgFixedType);
         this.wMethod(method);
         if (index !== array.length - 1) {
           this.write('\n');

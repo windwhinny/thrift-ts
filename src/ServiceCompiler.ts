@@ -11,6 +11,7 @@ import {
 
 export default class ServiceCompiler extends BaseCompiler {
   constructor(
+    public basename: string,
     public name: string,
     public service: Service,
     public includes?: Includes,
@@ -25,7 +26,7 @@ export default class ServiceCompiler extends BaseCompiler {
     }
     this.writeCallbackTypeDeclare();
     this.writeCommonType();
-    this.wExport(() => this.wService(this.service));
+    this.wExport(() => this.wService(this.service, this.basename));
 
     return {
       filename: `${path.basename(this.name, '.thrift')}.d.ts`,

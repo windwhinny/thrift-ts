@@ -1,5 +1,3 @@
-// tslint:disable:no-any
-
 export type SetType = {
   name: 'set',
   valueType: ValueType,
