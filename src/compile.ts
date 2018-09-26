@@ -1,5 +1,5 @@
 import path = require("path");
-import thriftPraser = require("./thriftParser");
+import thriftPraser from "./thriftParser";
 import BaseCompiler from "./BaseCompiler";
 import ServiceCompiler from "./ServiceCompiler";
 import { File, CompileOptions } from "./types";

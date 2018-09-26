@@ -1,5 +1,5 @@
 import BaseCompiler from "../src/BaseCompiler";
-import thriftPraser = require("../src/thriftParser");
+import thriftPraser from "../src/thriftParser";
 import * as sinon from "sinon";
 import * as chai from "chai";
 import * as fs from "fs";
