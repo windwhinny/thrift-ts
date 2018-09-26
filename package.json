@@ -2,7 +2,7 @@
   "name": "thrift-ts",
   "version": "1.1.5",
   "description": "parse .thrift file to .d.ts",
-  "main": "lib/index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "build": "tsc",
     "test": "tsc test/* --outDir test-tmp && mocha",

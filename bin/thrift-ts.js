@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const glob = require('glob');
-const thriftTs = require('../src');
+const thriftTs = require('../lib');
 const path = require('path');
 
 const argv = require('yargs')
