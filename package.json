@@ -28,7 +28,7 @@
     "typescript": "^3.0.3"
   },
   "bin": {
-    "thrift-ts": "./bin/thrift-ts.js"
+    "thrift-ts": "bin/index.js"
   },
   "dependencies": {
     "glob": "^7.1.3",
