@@ -29,6 +29,18 @@ const argv = require('yargs')
     default: false,
     type: 'boolean'
   })
+  .options('d', {
+      alias: 'definition',
+      describe: 'generate definition type',
+      default: true,
+      type: 'boolean'
+  })
+  .options('c', {
+      alias: 'camelCase',
+      describe: 'camel case',
+      default: false,
+      type: 'boolean'
+  })
   .options('v', {
     alias: 'version',
     describe: 'current version'
@@ -73,7 +85,7 @@ function getBasePath(files) {
 }
 
 /**
- * 如果直接输入文件夹的话，需转为类似 ./**\/*.thrift 
+ * If you enter the folder directly, you need to switch to similar ./**\/*.thrift
  * @param {string} folder 
  * @return {string} folder
  */
@@ -100,7 +112,7 @@ argv._.forEach((p) => {
   } else {
     out = './';
   }
-  // 如果直接输入文件夹路径话，需做转化
+  // if you enter the folder path directly, you need to do the conversion
   p = getFolderPath(p);
   glob(p, (err, files) => {
     if (err) throw err;
@@ -117,6 +129,9 @@ argv._.forEach((p) => {
         spaceAsTab: argv.spaceAsTab,
         int64AsString: argv.int64AsString,
       });
+      if (!fs.existsSync(out)){
+          fs.mkdirSync(out);
+      }
       files.forEach(newFile => {
         const outfile = path.join(out, newFile.filename);
         console.log('outfile:', outfile);
