@@ -1,7 +1,7 @@
 import BaseCompiler from "./BaseCompiler";
 import path = require("path");
 import { File, CompileOptions } from "./types";
-import { Includes, Service } from "./ast";
+import { Includes, Service } from "./thrift-parser";
 
 export default class ServiceCompiler extends BaseCompiler {
     constructor(

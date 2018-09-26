@@ -1,17 +1,23 @@
+import thriftParser from "thrift-parser";
+
 export type SetType = {
     name: "set";
     valueType: ValueType;
 };
+
 export type ListType = {
     name: "list";
     valueType: ValueType;
 };
+
 export type MapType = {
     name: "map";
     keyType: ValueType;
     valueType: ValueType;
 };
+
 export type ValueType = string | SetType | ListType | MapType;
+
 export type ThriftType =
     | "int"
     | "bool"
@@ -22,7 +28,9 @@ export type ThriftType =
     | "string"
     | "double"
     | "binary";
+
 export type FieldOption = "required" | "optional";
+
 export type Field = {
     id?: string;
     option?: FieldOption;
@@ -131,3 +139,10 @@ export type JsonAST = {
     exception?: Exceptions;
     service?: Services;
 };
+
+export interface ThriftFileParsingError extends Error {
+    messgae: string;
+    name: "THRIFT_FILE_PARSING_ERROR";
+}
+
+export default thriftParser as { (str: string | Buffer): JsonAST };

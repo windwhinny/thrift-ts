@@ -19,7 +19,7 @@ import {
     Method,
     Service,
     MapType
-} from "./ast";
+} from "./thrift-parser";
 import { INTEND_MODE, SPACE, TAB, CompileOptions } from "./types";
 
 export default class BaseCompiler {
