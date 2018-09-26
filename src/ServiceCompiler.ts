@@ -7,7 +7,7 @@ import {
 import {
   Includes,
   Service,
-} from '../lib/ast';
+} from './ast';
 
 export default class ServiceCompiler extends BaseCompiler {
   constructor(

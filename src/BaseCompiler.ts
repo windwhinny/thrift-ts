@@ -18,7 +18,7 @@ import {
   Method,
   Service,
   MapType
-} from '../lib/ast';
+} from './ast';
 import {
   INTEND_MODE,
   SPACE,
