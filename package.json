@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "test": "tsc test/* --outDir test-tmp && mocha",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "prettier": "prettier"
   },
   "repository": {
     "url": "https://github.com/windwhinny/thrift-ts.git",
@@ -25,6 +26,7 @@
     "chai": "^3.5.0",
     "growl": "^1.10.5",
     "mocha": "^3.5.3",
+    "prettier": "^1.14.3",
     "sinon": "^4.5.0",
     "typescript": "^3.0.3"
   },
