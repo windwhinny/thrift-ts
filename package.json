@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "tsc test/* --outDir test-tmp && mocha",
-    "prepublish": "npm run build"
+    "postinstall": "npm run build"
   },
   "repository": {
     "url": "https://github.com/windwhinny/thrift-ts.git",
