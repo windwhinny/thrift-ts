@@ -66,10 +66,12 @@ Session.vim
 .netrwhist
 *~
 
-dist
-!test/mock/dist
 spm_modules
+
 .vscode
 .idea
+
 **/*.js.map
 lib
+dist
+test-tmp

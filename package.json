@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "npm run build && mocha"
+    "test": "tsc test/* --outDir test-tmp && mocha"
   },
   "repository": {
     "url": "https://github.com/windwhinny/thrift-ts.git",
