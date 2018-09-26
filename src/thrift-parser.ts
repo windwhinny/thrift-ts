@@ -1,4 +1,6 @@
-import thriftParser from "thrift-parser";
+const thriftParser: (
+    str: string | Buffer
+) => JsonAST = require("thrift-parser");
 
 export type SetType = {
     name: "set";
@@ -145,4 +147,4 @@ export interface ThriftFileParsingError extends Error {
     name: "THRIFT_FILE_PARSING_ERROR";
 }
 
-export default thriftParser as { (str: string | Buffer): JsonAST };
+export default thriftParser;

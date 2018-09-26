@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as glob from "glob";
 import * as path from "path";
 import * as yargs from "yargs";
+import * as prettier from "prettier";
 
 import compile from "./compile";
 
@@ -143,7 +144,10 @@ export default () => {
                     console.log("outfile:", outfile);
                     fs.writeFileSync(
                         outfile,
-                        "// tslint:disable\n" + newFile.content
+                        prettier.format(
+                            "// tslint:disable\n" + newFile.content,
+                            { parser: "typescript" }
+                        )
                     );
                 });
             });
