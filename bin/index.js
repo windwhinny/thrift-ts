@@ -1,1 +1,1 @@
-require('../lib/cli').default();
+require("../lib/cli").default();
