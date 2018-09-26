@@ -1,3 +1,4 @@
+import { camelCase } from 'lodash';
 import {
   JsonAST,
   ThriftType,
@@ -34,6 +35,8 @@ export default class BaseCompiler {
   buffer: string[] = [];
   filename: string;
   int64AsString: boolean = false;
+  camelCase: boolean = false;
+  definition: boolean = true;
 
   constructor(options?: CompileOptions) {
     if (options) {
@@ -47,6 +50,14 @@ export default class BaseCompiler {
 
       if (typeof options.int64AsString !== 'undefined') {
         this.int64AsString = options.int64AsString;
+      }
+
+      if (typeof options.camelCase !== 'undefined') {
+          this.camelCase = options.camelCase;
+      }
+
+      if (typeof options.definition !== 'undefined') {
+          this.definition = options.definition;
       }
     }
   }
@@ -62,10 +73,10 @@ export default class BaseCompiler {
     return next();
   }
 
-  wBlock(inline: boolean = false, next: Function) {
+  wBlock(inline: boolean = false, next?: Function) {
     if (!inline) this.wIntend();
     this.write('{');
-    next();
+    next && next();
     this.wIntend();
     this.write('}');
     if (!inline) this.write('\n');
@@ -98,9 +109,13 @@ export default class BaseCompiler {
     return t;
   }
 
+  getName(v: {name: string}) {
+    return this.camelCase ? camelCase(v.name) : v.name;
+  }
+
   wField(f: Field) {
     this.wIntend();
-    this.write(f.name);
+    this.write(this.getName(f));
 
     if (f.option === 'optional') this.write('?');
     this.write(':', SPACE);
@@ -205,6 +220,10 @@ export default class BaseCompiler {
           this.decreaseIntend(false);
         });
       });
+      if (!this.definition) {
+          this.write(SPACE);
+          this.wBlock(true);
+      }
       this.write('\n');
     });
     this.write('\n');
@@ -216,7 +235,7 @@ export default class BaseCompiler {
           this.write('{');
           this.increaseIntend();
           this.wIntend();
-          this.write(field.name);
+          this.write(this.getName(field));
           if (field.option === 'optional') {
             this.write('?');
           }
@@ -262,7 +281,7 @@ export default class BaseCompiler {
 
   writeInclude(includes: Includes) {
     const getIncludePath = (path: string): string => {
-      return './' + path.replace(/.*\//, '').replace(/.thrift$/, '') + '_types';
+      return './' + path.replace(/.*\//, '').replace(/.thrift$/, '') + (this.definition ? '_types' : '');
     };
 
     Object.keys(includes).forEach((k: keyof typeof includes) => {
@@ -284,7 +303,7 @@ export default class BaseCompiler {
         this.increaseIntend();
         e.items.forEach(item => {
           this.wIntend();
-          this.write(item.name);
+          this.write(this.getName(item));
           if (typeof item.value === 'string') {
             this.write(SPACE, '=', SPACE, `'`, item.value, `'`);
           } else if (typeof item.value === 'number') {
@@ -369,7 +388,7 @@ export default class BaseCompiler {
     Object.keys(typedefs).forEach((k: keyof TypeDefs) => {
       const typedef = typedefs[k];
       this.wIntend();
-      this.write('type', SPACE, String(k), SPACE, '=', SPACE);
+      this.write('export type', SPACE, String(k), SPACE, '=', SPACE);
       this.wValueType(typedef.type);
       this.write(';\n');
     });

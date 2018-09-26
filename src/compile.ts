@@ -21,7 +21,7 @@ class Compile extends BaseCompiler {
 
     this.filename = file.filename;
     this.ast = thriftPraser(file.content);
-    if (this.ast.service) {
+    if (this.ast.service && this.definition) {
       const services = this.ast.service;
       const basename = path.basename(this.filename, '.thrift');
       const include = Object.assign({}, this.ast.include, {
@@ -68,7 +68,7 @@ class Compile extends BaseCompiler {
     }
 
     files.push({
-      filename: `${path.basename(this.filename, '.thrift')}_types.d.ts`,
+      filename: `${path.basename(this.filename, '.thrift')}${this.definition ? '_types.d.ts' : '.ts'}`,
       content: this.buffer.join(''),
     });
 

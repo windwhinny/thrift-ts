@@ -130,6 +130,8 @@ export default () => {
                     tabSize: argv.tabSize,
                     spaceAsTab: argv.spaceAsTab,
                     int64AsString: argv.int64AsString,
+                    definition: argv.definition,
+                    camelCase: argv.camelCase
                 });
                 if (!fs.existsSync(out)) {
                     fs.mkdirSync(out);
@@ -137,7 +139,7 @@ export default () => {
                 files.forEach(newFile => {
                     const outfile = path.join(out, newFile.filename);
                     console.log('outfile:', outfile);
-                    fs.writeFileSync(outfile, newFile.content);
+                    fs.writeFileSync(outfile, '// tslint:disable\n' + newFile.content);
                 })
             });
         });
