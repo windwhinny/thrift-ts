@@ -17,7 +17,8 @@ import {
   ArgOrExecption,
   Method,
   Service,
-} from '../lib/ast';
+  MapType
+} from './ast';
 import {
   INTEND_MODE,
   SPACE,
@@ -72,15 +73,19 @@ export default class BaseCompiler {
 
   getThriftTypeName(t: ThriftType) {
     switch (t) {
-      case 'int': return 'number';
-      case 'bool': return 'boolean';
+      case 'int':
+        return 'number';
+      case 'bool':
+        return 'boolean';
       case 'double':
       case 'i32':
       case 'i16':
+      case 'i8':
         return 'number';
       case 'i64':
         return 'Int64';
       case 'string':
+      case 'binary':
         return 'string';
       default:
         return null;
@@ -205,6 +210,28 @@ export default class BaseCompiler {
     this.write('\n');
   }
 
+  wUnion(name: string, ast: Field[]) {
+      this.write('type', SPACE, name, SPACE, '=', SPACE);
+      ast.forEach((field, idx) => {
+          this.write('{');
+          this.increaseIntend();
+          this.wIntend();
+          this.write(field.name);
+          if (field.option === 'optional') {
+            this.write('?');
+          }
+          this.write(':', SPACE);
+          this.wValueType(field.type);
+          this.write(';');
+          this.decreaseIntend();
+          this.write('}');
+          if (idx < ast.length - 1) {
+              this.write(' | ');
+          }
+      });
+      this.write('\n\n');
+  }
+
   wException(name: string, ast: Field[]) {
     this.wIntend();
     this.write('type', SPACE, name, SPACE, '=', SPACE);
@@ -222,7 +249,7 @@ export default class BaseCompiler {
   writeUnions(unions: Unions) {
     Object.keys(unions).forEach((k: keyof typeof unions) => {
       const s = unions[k];
-      this.wExport(() => this.wClass(String(k), s));
+      this.wExport(() => this.wUnion(String(k), s));
     });
   }
 
@@ -373,14 +400,17 @@ export default class BaseCompiler {
     }
   }
 
-  wPromise(type: ValueType, err: ArgOrExecption[]) {
+  wPromise(type: ValueType) {
     this.write('Promise', '<');
     this.wValueType(type);
-    if (err.length) {
-      this.write(',', SPACE);
-      this.write(err.map(e => e.type).join(' | '));
-    }
     this.write('>');
+  }
+
+  getUniqName(argsLike: {name: string}[], name: string = '') {
+    while (argsLike.findIndex((arg) => arg.name === name) >= 0) {
+        name = '_' + name;
+    }
+    return name;
   }
 
   wMethodArgs(args: ArgOrExecption[], callback?: {
@@ -398,7 +428,7 @@ export default class BaseCompiler {
     });
 
     if (callback) {
-      this.write('callback', ':', SPACE, 'Callback', '<');
+      this.write(this.getUniqName(args, 'callback'), ':', SPACE, 'Callback', '<');
       this.wValueType(callback.returnType);
       this.write(',', SPACE);
       if (callback.expections.length) {
@@ -430,17 +460,49 @@ export default class BaseCompiler {
     this.wBrackets(() => {
       this.wMethodArgs(method.args);
     });
-    this.write(':', SPACE)
-    this.wPromise(method.type, method.throws);
-    this.write(';'); this.write('\n');
+    this.write(':', SPACE);
+    this.wPromise(method.type);
+    this.write(';');
+    this.write('\n');
   }
 
-  wService(service: Service) {
+  getFixedType(type: ValueType, basename: string) {
+    if (type) {
+      if (typeof type === 'string') {
+        const parts = type.split('.');
+        if (!parts[1] && type[0] === type[0].toUpperCase()) {
+          type = basename + '.' + parts[0];
+        }
+      } else if (typeof type === 'object') {
+        if (type.hasOwnProperty('valueType')) {
+          type.valueType = this.getFixedType(type.valueType, basename);
+        }
+        if (type.hasOwnProperty('keyType')) {
+          (type as MapType).keyType = this.getFixedType(
+            (type as MapType).keyType,
+            basename
+          );
+        }
+      }
+    }
+    return type;
+  }
+
+  setArgFixedType(argLike: {type: ValueType}, basename: string) {
+    argLike.type = this.getFixedType(argLike.type, basename);
+    return argLike;
+  }
+
+  wService(service: Service, basename: string) {
     this.wIntend();
     this.write('class', SPACE, 'Client', SPACE);
     this.wBlock(false, () => {
       this.increaseIntend();
       Object.values(service.functions).forEach((method, index, array) => {
+        const setArgFixedType = (arg: {type: ValueType}) => this.setArgFixedType(arg, basename);
+        setArgFixedType(method);
+        method.args.forEach(setArgFixedType);
+        method.throws.forEach(setArgFixedType);
         this.wMethod(method);
         if (index !== array.length - 1) {
           this.write('\n');

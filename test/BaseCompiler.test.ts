@@ -1,9 +1,9 @@
 import BaseCompiler from '../src/BaseCompiler';
-import thriftPraser = require('../lib/thriftParser');
+import thriftPraser = require('../src/thriftParser');
 import * as sinon from 'sinon';
 import * as chai from 'chai';
 import * as fs from 'fs';
-import { JsonAST } from '../lib/ast';
+import { JsonAST } from '../src/ast';
 import * as Path from 'path';
 chai.should();
 

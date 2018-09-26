@@ -8,6 +8,6 @@ interface Int64 {
 }
 
 export class Client {
-    search(request: Request, callback: Callback<Response, Error>): void;
-    search(request: Request): Promise<Response>;
+    search(request: test.Request, callback: Callback<test.Response, Error>): void;
+    search(request: test.Request): Promise<test.Response>;
 }

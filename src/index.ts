@@ -1,5 +1,5 @@
 import path = require('path');
-import thriftPraser = require('../lib/thriftParser');
+import thriftPraser = require('./thriftParser');
 import BaseCompiler from './BaseCompiler';
 import ServiceCompiler from './ServiceCompiler';
 import {
@@ -31,7 +31,7 @@ class Compiler extends BaseCompiler {
       });
 
       this.serviceCompilers = Object.keys(services).map((k) => {
-        return new ServiceCompiler(String(k), services[k], include, options);
+        return new ServiceCompiler(basename, String(k), services[k], include, options);
       });
     }
   }
