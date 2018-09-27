@@ -204,25 +204,26 @@ export default class BaseCompiler {
 
     wClass(name: string, ast: Field[]) {
         this.wIntend();
-        this.write("class", SPACE, name, SPACE);
-        this.wStructBody(ast, () => {
-            this.write("\n");
-            this.wIntend();
-            this.write("constructor");
-            this.wBrackets(() => {
-                this.write("arg?", ":", SPACE);
-                this.wBlock(true, () => {
-                    this.increaseIntend();
-                    ast.forEach(this.wField.bind(this));
-                    this.decreaseIntend(false);
-                });
-            });
-            if (!this.definition) {
-                this.write(SPACE);
-                this.wBlock(true);
-            }
-            this.write("\n");
-        });
+        this.write(this.definition ? "class" : "interface", SPACE, name, SPACE);
+        this.wStructBody(
+            ast,
+            this.definition
+                ? () => {
+                      this.write("\n");
+                      this.wIntend();
+                      this.write("constructor");
+                      this.wBrackets(() => {
+                          this.write("arg?", ":", SPACE);
+                          this.wBlock(true, () => {
+                              this.increaseIntend();
+                              ast.forEach(this.wField.bind(this));
+                              this.decreaseIntend(false);
+                          });
+                      });
+                      this.write("\n");
+                  }
+                : () => {}
+        );
         this.write("\n");
     }
 
